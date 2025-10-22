@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import axios from "../api/axios";
+
+import "react-calendar/dist/Calendar.css";
+import Calendar from "react-calendar";
 import "../assets/css/CalendarPage.css";
 
 export default function CalendarPage() {
@@ -48,7 +49,7 @@ export default function CalendarPage() {
     });
   }, [events, alertIds]);
 
-  // ✅ 검색 시 자동 날짜 이동
+  // 검색 시 자동 날짜 이동
   useEffect(() => {
     if (!searchTerm) return;
     const matched = events.find((e) =>
@@ -59,7 +60,7 @@ export default function CalendarPage() {
     }
   }, [searchTerm, events]);
 
-  // ✅ 날짜 문자열 생성 (시간대 오류 방지)
+  // 날짜 문자열 생성 (시간대 오류 방지)
   const formatDate = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 

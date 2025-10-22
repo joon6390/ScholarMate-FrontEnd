@@ -1,4 +1,3 @@
-// src/components/PostComposeModal.jsx
 import { useEffect } from "react";
 import { Modal, Form, Input, Select, message } from "antd";
 import { createPost } from "../api/community";
@@ -105,8 +104,6 @@ export default function PostComposeModal({
         <Form.Item name="tags" label="태그 (엔터로 추가)">
           <Select mode="tags" tokenSeparators={[","]} placeholder="예) 자소서, 면접, 준비기간" />
         </Form.Item>
-
-        {/* ✔ 수혜자 인증 배지 스위치 완전히 제거됨 */}
       </Form>
     </Modal>
   );

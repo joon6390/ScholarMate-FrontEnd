@@ -1,9 +1,4 @@
-/* =========================
-   ScholarMate - Unified CSS
-   (scholarships + wishlist + modal)
-   ========================= */
 :root{
-  /* Colors */
   --primary:#008cba;
   --primary-hover:#005f87;
   --brand-blue:#0b5ed7;
@@ -11,36 +6,28 @@
   --muted:#ddd;
   --bg-soft:#f4f4f4;
   --overlay:rgba(0,0,0,0.6);
-
-  /* Spacing / layout */
   --container-max:1200px;
   --header-offset:100px;
   --modal-top-pad:120px;
   --modal-side-pad:16px;
 }
-
-/* ---------- Scholarships ---------- */
 .scholarships-container {
   width: 100%;
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 20px 20px 40px; 
 }
-
 .scholarships-container h1 {
   font-size: 1.8rem;
   margin: 10px 0 16px;
   text-align: center;
 }
-
-/* ---------- Search & filter ---------- */
 .search-and-filter{
   display:flex;
   gap:10px;
   margin-bottom:20px;
   flex-wrap:wrap;
 }
-
 .search-input{
   flex:1;
   padding:10px;
@@ -53,7 +40,6 @@
   transition:border-color .3s;
 }
 .search-input:focus{ border-color:var(--primary-hover); }
-
 .filter-dropdown,
 .sort-dropdown{
   padding:10px 15px;
@@ -67,14 +53,11 @@
 }
 .filter-dropdown:hover,
 .sort-dropdown:hover{ background:var(--primary-hover); }
-
-/* ---------- Table ---------- */
 .scholarships-table{
   width:100%;
   border-collapse:collapse;
   margin-bottom:20px;
 }
-
 .scholarships-table th,
 .scholarships-table td{
   border:1px solid var(--muted);
@@ -82,17 +65,13 @@
   text-align:left;
   font-size:.9rem;
 }
-
 .scholarships-table th{
   background:var(--bg-soft);
   font-weight:700;
 }
-
 .scholarships-table th:nth-child(2),
 .scholarships-table td:nth-child(2){ font-weight:700; }
 .scholarships-table td:nth-child(2){ color:var(--brand-blue); }
-
-/* ---------- Buttons ---------- */
 .details-btn{
   color:#fff;
   background:var(--primary);
@@ -101,7 +80,6 @@
   border-radius:5px;
   white-space:nowrap;
 }
-
 .favorite-btn{
   background:none;
   border:none;
@@ -111,8 +89,6 @@
 }
 .favorite-btn:focus{ outline:none; }
 .favorite-btn.favorited{ color:red; }
-
-/* ---------- Pagination ---------- */
 .pagination{
   display:flex;
   justify-content:center;
@@ -130,8 +106,6 @@
   cursor:not-allowed;
   opacity:.5;
 }
-
-/* ---------- Modal ---------- */
 .modal-overlay{
   position:fixed;
   inset:0;
@@ -143,7 +117,6 @@
   padding-top:var(--modal-top-pad);
   padding-bottom:24px;
 }
-
 .modal-content{
   position:relative;
   width:min(720px, 92vw);
@@ -157,7 +130,6 @@
   max-height:calc(100vh - (var(--modal-top-pad) + 24px));
   overflow-y:auto;
 }
-
 .modal-content h2{
   margin:0 0 12px 0;
   padding-right:48px;
@@ -166,14 +138,11 @@
   font-size:1.15rem;
   color:var(--brand-blue);
 }
-
 .modal-body{
   padding-right:4px;
   line-height:1.6;
   font-size:.95rem;
 }
-
-/* Close button */
 .modal-close{
   position:absolute;
   top:10px;
@@ -201,7 +170,6 @@
   text-align:center;
   min-height:550px;
 }
-
 .wishlist-table-container{
   max-height:500px;
   overflow-y:auto;
@@ -209,7 +177,6 @@
   margin-top:20px;
   border-radius:8px;
 }
-
 .wishlist-table{ width:100%; border-collapse:collapse; }
 .wishlist-table thead th{
   position:sticky; top:0; background:#f0f0f0; z-index:2;
@@ -221,8 +188,6 @@
   font-size:.95rem;
   text-align:center;
 }
-
-/* ✅ Wishlist 모바일 카드형 */
 .wishlist-card{
   background:#fff;
   border:1px solid #ddd;
@@ -276,7 +241,6 @@
 .wishlist-card .actions .detail:hover{
   background:#e5e7eb;
 }
-
 .delete-btn{
   color:#fff;
   background:#ff4d4d;
@@ -287,8 +251,6 @@
   cursor:pointer;
 }
 .delete-btn:hover{ background:#cc0000; }
-
-/* ===== Toast ===== */
 .toast-root {
   position: fixed;
   right: 24px;
@@ -308,8 +270,6 @@
 .toast-success { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
 .toast-error   { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
 .toast-info    { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
-
-/* ===== Search buttons ===== */
 .search-btn{
   padding:10px 14px;
   border:none;
@@ -322,7 +282,6 @@
 }
 .search-btn:hover{ opacity:.9; }
 .search-btn:active{ transform:translateY(1px); }
-
 .search-clear-btn{
   padding:10px 12px;
   border:1px solid #d1d5db;
@@ -336,8 +295,6 @@
   background:#f3f4f6;
   border-color:#c7cdd4;
 }
-
-/* ===== Pagination (numbered) ===== */
 .pagination{
   display:flex;
   align-items:center;
@@ -346,13 +303,11 @@
   margin-top:20px;
   flex-wrap:wrap;
 }
-
 .pagination .range-text{
   font-size:.9rem;
   color:#6b7280;
   margin-right:4px;
 }
-
 .pagination .icon-btn,
 .pagination .page-btn{
   min-width:38px;
@@ -371,25 +326,21 @@
 }
 .pagination .page-btn:hover,
 .pagination .icon-btn:hover{ background:#f3f4f6; }
-
 .pagination .page-btn.is-current{
   background:#111;
   color:#fff;
   border-color:#111;
 }
-
 .pagination .icon-btn:disabled,
 .pagination .page-btn:disabled{
   cursor:not-allowed;
   opacity:.5;
 }
-
 .pagination .ellipsis{
   padding:0 4px;
   color:#6b7280;
   user-select:none;
 }
-
 .pagination .perpage-select{
   margin-left:6px;
   height:38px;
@@ -399,8 +350,6 @@
   background:#fff;
   color:#111;
 }
-
-/* focus visible */
 .search-input:focus,
 .search-btn:focus,
 .search-clear-btn:focus,
@@ -411,58 +360,46 @@
   outline-offset:2px;
 }
 
-/* ≤768px (tablet) */
 @media (max-width:768px){
   .search-and-filter{ flex-direction:column; align-items:stretch; gap:8px; }
   .search-input{ width:100%; font-size:.9rem; padding:8px; }
   .filter-dropdown,.sort-dropdown{ width:100%; font-size:.9rem; padding:8px; }
-
   .scholarships-table th,
   .scholarships-table td{ font-size:.8rem; padding:6px; }
-
   .details-btn{ font-size:.8rem; padding:4px 8px; }
   .favorite-btn{ font-size:1rem; }
-
   .pagination button{ font-size:.8rem; padding:6px 10px; }
-
   .modal-overlay{ padding-top:100px; }
   .modal-content{ margin:0 8px; padding:12px; }
   .modal-content h2{ font-size:1rem; }
   .modal-body{ font-size:.85rem; }
-
   .wishlist-table th, .wishlist-table td{ font-size:.8rem; padding:6px; }
 }
 
-/* ≤480px (mobile, 작은폰) */
 @media (max-width:480px){
   .scholarships-container{ padding:4px; }
-
   .search-and-filter{
     gap:4px;
     flex-direction:row;
     flex-wrap:wrap;
   }
-
   .search-input{
     flex:1 1 100%;
     font-size:.7rem;
     padding:5px;
   }
-
   .search-btn,
   .search-clear-btn{
     flex:1 1 48%;
     font-size:.7rem;
     padding:6px;
   }
-
   .filter-dropdown,
   .sort-dropdown{
     flex:1 1 48%;
     font-size:.7rem;
     padding:6px;
   }
-
   .scholarships-table{ font-size:.7rem; table-layout:fixed; }
   .scholarships-table th,
   .scholarships-table td{
@@ -472,15 +409,11 @@
     overflow:hidden;
     text-overflow:ellipsis;
   }
-
   .details-btn{ font-size:.65rem; padding:2px 4px; }
-
   .pagination button{ padding:3px 5px; font-size:.65rem; min-width:26px; height:26px; }
-
   .modal-content{ padding:6px; border-radius:6px; }
   .modal-content h2{ font-size:.85rem; }
   .modal-body{ font-size:.7rem; }
-
   .wishlist-wrapper{ min-height:320px; }
   .wishlist-table-container{ max-height:180px; }
   .wishlist-table th, .wishlist-table td{ font-size:.7rem; padding:3px; }

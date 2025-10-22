@@ -1,4 +1,3 @@
-// src/api/user.js
 import axios from "./axios";
 
 /**
@@ -7,6 +6,7 @@ import axios from "./axios";
  *
  * @returns {Object|null} 사용자 정보 (id, username, email, is_staff 등) 또는 null
  */
+
 export async function fetchMe() {
   try {
     const { data } = await axios.get("/auth/users/me/");

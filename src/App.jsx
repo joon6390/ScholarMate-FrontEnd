@@ -1,27 +1,28 @@
-// src/App.jsx
 import { useState, useEffect, useRef } from "react";
 import { Route, Routes, Navigate, useNavigate, useLocation } from "react-router-dom";
-import Home from "./pages/Home";
-import Scholarships from "./pages/Scholarships";
-import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Useinfor from "./pages/Userinfor";
+import isTokenExpired from "./api/auth";
+
+import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
 import Wishlist from "./components/Wishlist";
-import CalendarPage from "./pages/Calendar";
-import isTokenExpired from "./api/auth";
+
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Useinfor from "./pages/Userinfor";
+import Scholarships from "./pages/Scholarships";
 import Recommendation from "./pages/Recommendation";
+import CalendarPage from "./pages/Calendar";
 import CommunityPage from "./pages/CommunityPage";
-import Introduction from "./pages/Introduction";
+import CommunityDetail from "./pages/CommunityDetail";
 import NoticeList from "./pages/NoticeList";
 import NoticeDetail from "./pages/NoticeDetail";
-import CommunityDetail from "./pages/CommunityDetail";
-import "antd/dist/reset.css";
-import Messages from "./pages/Messages";
 import MessagesList from "./pages/MessagesList";
-import Header from "./components/Header";
+import Messages from "./pages/Messages";
+import Introduction from "./pages/Introduction";
 
+import "antd/dist/reset.css";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,7 +42,7 @@ export default function App() {
     }
   }, [location.pathname]);
 
-  // ===== 무조건 중앙 정렬 스크롤 =====
+  // 중앙 정렬 스크롤 
   const scrollToSectionId = (sectionId) => {
     const el = document.getElementById(sectionId);
     if (!el) return false;

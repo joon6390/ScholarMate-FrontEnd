@@ -1,6 +1,7 @@
 // src/components/Header.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import logo from "../assets/img/로고.png";
 import HeaderMessagesIcon from "./HeaderMessagesIcon";
 
@@ -36,9 +37,9 @@ export default function Header({ isLoggedIn, setIsLoggedIn, goToSection }) {
 
   return (
     <>
-      {/* ===== Header ===== */}
+      {/*  헤더  */}
       <header className="header flex flex-wrap justify-between items-center px-4 py-3 bg-white shadow-md sticky top-0 z-50">
-        {/* Left */}
+        {/* 왼쪽 */}
         <div className="flex items-center mb-2 md:mb-0">
           <Link to="/" className="flex items-center">
             <img src={logo} alt="Logo" className="logo h-10 w-auto" />
@@ -46,7 +47,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn, goToSection }) {
           </Link>
         </div>
 
-        {/* Center Nav */}
+        {/* 네비게이션 */}
         <nav className="nav flex gap-3 overflow-x-auto scrollbar-hide whitespace-nowrap text-xs sm:text-sm md:text-base mb-2 md:mb-0 w-full md:w-auto justify-center">
           <Link to="/scholarships" className="nav-btn">전체 장학금</Link>
           <Link to="/recommendation" className="nav-btn">추천 장학금</Link>
@@ -55,7 +56,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn, goToSection }) {
           <Link to="/Userinfor" className="nav-btn">나의 장학 정보</Link>
         </nav>
 
-        {/* Right */}
+        {/* 오른쪽 */}
         <div className="header-right flex flex-row gap-2 items-center whitespace-nowrap">
           <Link to="/messages" className="nav-btn text-xs sm:text-sm md:text-base">쪽지함</Link>
           <HeaderMessagesIcon />
@@ -82,7 +83,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn, goToSection }) {
         </div>
       </header>
 
-      {/* ===== Drawer ===== */}
+      {/* Drawer */}
       <div id="left-drawer" className={`drawer ${sidebarOpen ? "open" : ""}`} onClick={() => setSidebarOpen(false)}>
         <nav className="drawer-panel" onClick={(e) => e.stopPropagation()}>
           <div className="drawer-head flex justify-between items-center p-4 border-b">

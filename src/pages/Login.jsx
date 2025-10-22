@@ -1,12 +1,12 @@
-// src/pages/Login.jsx
 import { useState, useEffect, useRef } from "react";
-import axios from "../api/axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "../api/axios";
+
 import logo from "../assets/img/로고.png";
 
-/* ------------------------------
-   공용 모달 셸
--------------------------------- */
+
+
+// 공용 모달 셸
 function ModalShell({ title, onClose, children }) {
   return (
     <div className="fixed inset-0 z-50">
@@ -34,9 +34,8 @@ function ModalShell({ title, onClose, children }) {
   );
 }
 
-/* ------------------------------
-   아이디 찾기 모달
--------------------------------- */
+
+// 아이디 찾기 모달
 function FindIdModal({
   onClose,
   idEmail, setIdEmail,
@@ -140,9 +139,8 @@ function FindIdModal({
   );
 }
 
-/* ------------------------------
-   비밀번호 재설정 모달
--------------------------------- */
+
+// 비밀번호 재설정 모달
 function ResetPwByCodeModal({ onClose, inputCls }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -278,9 +276,9 @@ function ResetPwByCodeModal({ onClose, inputCls }) {
   );
 }
 
-/* ------------------------------
-   로그인 페이지
--------------------------------- */
+
+   
+// 로그인 페이지
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");

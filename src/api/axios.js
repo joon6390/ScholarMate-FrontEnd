@@ -1,13 +1,7 @@
-// src/api/axios.js
 import axios from "axios";
 import isTokenExpired from "./auth";
 
-/**
- * Axios 공통 인스턴스 (JWT Bearer + 자동 리프레시)
- *
- * 운영(Vercel): '/api' → vercel.json의 rewrites가 백엔드로 프록시
- * 로컬(Vite): '/api' → vite.config.js proxy가 VITE_API_BASE_URL로 프록시
- */
+// Axios 공통 인스턴스 (JWT Bearer + 자동 리프레시)
 const instance = axios.create({
   baseURL: "/api",
   timeout: 15000,
@@ -43,16 +37,10 @@ function logoutAndRedirect() {
   window.location.href = `/login?next=${next}`;
 }
 
-/**
- * NOTE:
- *  - 인터셉터 재귀를 피하려고 기본 axios 로 호출
- *  - '/api/auth/jwt/refresh/' 는 Bearer 불필요
- */
 async function refreshAccessToken() {
   const refreshToken = getRefresh();
   if (!refreshToken) throw new Error("NO_REFRESH_TOKEN");
 
-  // baseURL '/api' 기준으로 절대 URL 구성
   const url = `${instance.defaults.baseURL}/auth/jwt/refresh/`;
   const { data } = await axios.post(
     url,
@@ -69,7 +57,7 @@ async function refreshAccessToken() {
   return newAccess;
 }
 
-/* ========== 요청 인터셉터 ========== */
+/* 요청 인터셉터 */
 instance.interceptors.request.use(
   async (config) => {
     // 기본 Content-Type 지정 (이미 설정돼 있으면 유지)
@@ -89,7 +77,6 @@ instance.interceptors.request.use(
     const accessToken = getAccess();
     const refreshToken = getRefresh();
 
-    // refresh 엔드포인트엔 Authorization 달지 않음
     const isRefreshCall =
       (config.url || "").includes("/auth/jwt/refresh/") ||
       (config.baseURL && (config.baseURL + config.url).includes("/auth/jwt/refresh/"));
@@ -123,7 +110,7 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-/* ========== 응답 인터셉터 ========== */
+/* 응답 인터셉터 */
 instance.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -174,7 +161,6 @@ instance.interceptors.response.use(
 
 export default instance;
 
-// (선택) 외부에서 토큰 제어가 필요할 때 사용할 유틸
 export const tokenUtils = {
   getAccess,
   getRefresh,

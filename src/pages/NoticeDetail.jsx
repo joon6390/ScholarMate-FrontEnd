@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Spin, Empty, Button, Modal, Form, Input as AntInput, Switch, message } from "antd";
 import { fetchNotice, updateNotice, deleteNotice } from "../api/notices";
 import { fetchMe } from "../api/user";
+import { Spin, Empty, Button, Modal, Form, Input as AntInput, Switch, message } from "antd";
 
 export default function NoticeDetail() {
   const { id } = useParams();

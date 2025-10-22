@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   FaUserPlus,
   FaSearch,
@@ -70,14 +71,14 @@ export default function HowItWorksSection() {
                 {step.description}
               </p>
 
-              {/* 👉 데스크탑: 오른쪽 화살표 */}
+              {/* 데스크탑: 오른쪽 화살표 */}
               {index < steps.length - 1 && (
                 <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2">
                   <i className="fas fa-chevron-right text-gray-400 text-base"></i>
                 </div>
               )}
 
-              {/* 👉 모바일: 아래쪽 화살표 */}
+              {/* 모바일: 아래쪽 화살표 */}
               {index < steps.length - 1 && (
                 <div className="block md:hidden mt-2">
                   <i className="fas fa-chevron-down text-gray-400 text-base"></i>

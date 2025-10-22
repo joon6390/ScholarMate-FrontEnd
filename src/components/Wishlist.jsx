@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import api from "../api/axios";  // ✅ 공용 axios 인스턴스
+import api from "../api/axios";  
+
 import "../assets/css/scholarships.css";
 
 export default function Wishlist() {
@@ -9,7 +10,7 @@ export default function Wishlist() {
   const [selectedScholarship, setSelectedScholarship] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ------- URL 정규화/가드 -------
+  // URL 정규화/가드 
   const normalizeUrl = (u) => {
     if (!u || typeof u !== "string") return null;
     const v = u.trim();
@@ -28,7 +29,7 @@ export default function Wishlist() {
     }
   };
   const urlFor = (s) => normalizeUrl(s?.url || s?.homepage_url || s?.link);
-  // --------------------------------
+ 
 
   // body 중앙정렬 클래스
   useEffect(() => {
@@ -90,7 +91,7 @@ export default function Wishlist() {
         <div className="no-results">관심 장학금이 없습니다.</div>
       ) : (
         <>
-          {/* ✅ 데스크탑/태블릿: 테이블 */}
+          {/* 데스크탑/태블릿: 테이블 */}
           <div className="hidden md:block wishlist-table-container">
             <table className="wishlist-table">
               <thead>
@@ -149,7 +150,7 @@ export default function Wishlist() {
             </table>
           </div>
 
-          {/* ✅ 모바일: 카드형 */}
+          {/* 모바일: 카드형 */}
           <div className="md:hidden space-y-4">
             {wishlist.map((item) => {
               const s = item.scholarship;

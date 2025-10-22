@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
+
 import "../assets/css/profile.css";
 
 export default function Profile() {
@@ -8,7 +9,7 @@ export default function Profile() {
   const [userData, setUserData] = useState(null);
   const [scholarshipData, setScholarshipData] = useState(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true); // ✅ 로딩 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
 
   // 토큰 갱신
   const refreshAccessToken = async () => {
@@ -81,7 +82,7 @@ export default function Profile() {
     loadData();
   }, []);
 
-  // ===== UI 처리 =====
+  // UI 처리 
   if (loading) {
     return (
       <div className="page-wrapper flex justify-center items-center h-screen">

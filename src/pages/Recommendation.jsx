@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios";   // ✅ axios 인스턴스 사용
+import api from "../api/axios";  
 
 const DUMMY_RECOMMENDATIONS = [
   {
@@ -36,7 +36,7 @@ export default function Recommendation() {
 
   const navigate = useNavigate();
 
-  // ===== URL 정규화 =====
+  // URL 정규화 
   const resolveUrl = (u) => {
     if (!u) return null;
     const v = String(u).trim();
@@ -68,7 +68,7 @@ export default function Recommendation() {
     return () => window.removeEventListener("resize", updatePad);
   }, []);
 
-  // ===== 토스트 =====
+  // 토스트 
   const [toast, setToast] = useState({ open: false, message: "", type: "success" });
   const toastTimerRef = useRef(null);
 
@@ -82,7 +82,7 @@ export default function Recommendation() {
   };
   useEffect(() => () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }, []);
 
-  // ===== 추천 로드 =====
+  // 추천 로드
   useEffect(() => {
     const fetchRecommendations = async () => {
       setLoading(true);
@@ -119,7 +119,7 @@ export default function Recommendation() {
     fetchRecommendations();
   }, [navigate]);
 
-  // ===== 찜 목록 로드 =====
+  // 찜 목록 로드 
   useEffect(() => {
     const loadFavorites = async () => {
       try {
@@ -139,7 +139,7 @@ export default function Recommendation() {
   const openModal = (item) => { setSelected(item); setIsModalOpen(true); };
   const closeModal = () => { setSelected(null); setIsModalOpen(false); };
 
-  // ===== 찜 토글 =====
+  // 찜 토글 
   const toggleFavorite = async (item) => {
     const id = item.product_id ?? item.id;
     const isFavorited = favorites.has(id);
@@ -177,7 +177,7 @@ export default function Recommendation() {
     }
   };
 
-  // ✅ 레이아웃 래퍼
+  // 레이아웃 래퍼
   const Wrapper = ({ children }) => (
     <main className="min-h-screen bg-gray-100" style={{ paddingTop: "20px" }}>
       <div className="w-screen max-w-full px-2 sm:px-4 flex justify-center">

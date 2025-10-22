@@ -1,11 +1,12 @@
-import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
+import Slider from "react-slick";
 import sliderImage1 from "../assets/img/메인1.jpg";
 import sliderImage2 from "../assets/img/메인2.jpg";
 import "../assets/css/slider.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 function NextArrow(props) {
   const { onClick } = props;

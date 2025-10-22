@@ -1,15 +1,18 @@
-// src/pages/CommunityPage.jsx
 import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+
 import {
   Input, Card, Avatar, Tag, Skeleton, Pagination, Button,
   message, Segmented, Tooltip,
 } from "antd";
+
 import {
   HeartOutlined, HeartFilled, ShareAltOutlined,
   BookOutlined, BookFilled, LoadingOutlined,
 } from "@ant-design/icons";
-import { Link, useSearchParams } from "react-router-dom";
+
 import "../assets/css/community.css";
+
 import {
   listPosts,
   likePost,
@@ -18,7 +21,9 @@ import {
   unbookmarkPost,
   listBookmarkedPosts,
 } from "../api/community";
+
 import { fetchMe } from "../api/user";
+
 import PostComposeModal from "../components/PostComposeModal";
 
 export default function CommunityPage() {
@@ -225,7 +230,7 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
-      {/* ===== 상단 헤더 ===== */}
+      {/* 상단 헤더 */}
       <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 sm:px-6 py-6 shadow">
         <div className="w-full flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -288,7 +293,7 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      {/* ===== 본문 ===== */}
+      {/*  본문 */}
       <main className="w-full px-4 sm:px-6 py-6 flex-1">
         <h2 className="text-lg sm:text-2xl font-bold mb-4">
           게시글 <span className="text-gray-500 text-sm sm:text-base">({total}건)</span>

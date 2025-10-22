@@ -1,10 +1,9 @@
-// src/pages/Introduction.jsx
 import { Link } from "react-router-dom";
 
 export default function Introduction() {
   return (
     <main className="pt-6 pb-6">
-      {/* ===== Hero ===== */}
+      {/* Hero */}
       <section className="relative left-1/2 -translate-x-1/2 w-[min(92vw,1280px)]">
         <div className="bg-white rounded-2xl shadow-lg p-10 md:p-14">
           <h1 className="text-center text-4xl md:text-6xl font-extrabold text-[#0B2D6B]">
@@ -48,7 +47,7 @@ export default function Introduction() {
         </div>
       </section>
 
-      {/* ===== Tech / 로드맵 ===== */}
+      {/* Tech / 로드맵 */}
       <section className="relative left-1/2 -translate-x-1/2 w-[min(92vw,1280px)] mt-16 grid md:grid-cols-2 gap-8">
         <div className="rounded-2xl border p-8">
           <h2 className="text-xl font-bold text-[#0B2D6B] text-center md:text-left">기술 스택</h2>

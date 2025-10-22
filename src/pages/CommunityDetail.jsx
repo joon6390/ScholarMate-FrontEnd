@@ -1,6 +1,7 @@
-// src/pages/CommunityDetail.jsx
 import { useEffect, useMemo, useRef, useState, useCallback, memo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { fetchMe } from "../api/user";
+
 import {
   Card,
   Avatar,
@@ -13,6 +14,7 @@ import {
   Popconfirm,
   Modal,
 } from "antd";
+
 import {
   getPost,
   incView,
@@ -25,11 +27,9 @@ import {
   updatePost,
   deletePost,
 } from "../api/community";
-import { fetchMe } from "../api/user";
 
-/* -------------------------------------------
- * ReplyEditor: 독립 컴포넌트 (IME 안전)
- * ------------------------------------------*/
+
+// ReplyEditor: 독립 컴포넌트 (IME 안전)
 const ReplyEditor = memo(function ReplyEditor({ onSubmit, onCancel, autoFocus = true }) {
   const [value, setValue] = useState("");
   const composingRef = useRef(false);
@@ -125,10 +125,9 @@ export default function CommunityDetail() {
   useEffect(() => {
     viewedOnceRef.current = false;
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  /* ---------- 최상위 댓글 등록 ---------- */
+  // 최상위 댓글 등록
   const submit = async () => {
     const value = text.trim();
     if (!value) return;
@@ -165,7 +164,7 @@ export default function CommunityDetail() {
     }
   };
 
-  /* ---------- 글(포스트) 정보 ---------- */
+  // 글(포스트) 정보
   const authorId =
     post?.author?.id ?? post?.author_id ?? post?.authorId ?? null;
   const authorUsername =
@@ -176,14 +175,14 @@ export default function CommunityDetail() {
     ((authorId != null && Number(authorId) === Number(me.id)) ||
       (authorUsername && authorUsername === me.username));
 
-  /* ---------- DM ---------- */
+  // DM
   const startDM = async () => {
     if (!authorId && !authorUsername) {
       message.warning("작성자 정보를 찾을 수 없습니다.");
       return;
     }
     if (me && authorId && Number(authorId) === Number(me.id)) {
-      return; // ✅ 자기 자신이면 아예 실행도 안 함
+      return; // 자기 자신이면 실행 X
     }
 
     try {
@@ -213,7 +212,7 @@ export default function CommunityDetail() {
     }
   };
 
-  /* ---------- 댓글/답글 수정/삭제 ---------- */
+  // 댓글/답글 수정/삭제
   const beginEdit = (c) => {
     setEditingId(c.id);
     setEditingText(c.content);
@@ -253,7 +252,7 @@ export default function CommunityDetail() {
     }
   };
 
-  /* ---------- 답글(대댓글) ---------- */
+  // 답글(대댓글) 
   const submitReply = useCallback(
     async (parent, value, resetInput) => {
       try {
@@ -277,7 +276,7 @@ export default function CommunityDetail() {
     [id]
   );
 
-  /* ---------- 포스트 수정/삭제 ---------- */
+  // 포스트 수정/삭제
   const openPostEdit = () => {
     setPostTitle(post?.title || post?.scholarship_name || "");
     setPostContent(post?.content || "");
@@ -316,7 +315,7 @@ export default function CommunityDetail() {
     }
   };
 
-  /* ---------- 트리 구성 ---------- */
+  // 트리 구성 
   const roots = useMemo(() => comments.filter((c) => !c.parent), [comments]);
   const childrenMap = useMemo(() => {
     const acc = {};
@@ -328,7 +327,7 @@ export default function CommunityDetail() {
     return acc;
   }, [comments]);
 
-  /* ====== 댓글 아이템 ====== */
+  // 댓글 아이템 
   const CommentItem = ({ c, depth = 0 }) => {
     const cAuthorId = c.author?.id ?? c.author_id ?? c.user?.id ?? null;
     const cAuthorUsername =

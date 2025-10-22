@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white py-12 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
-        {/* 👇 모바일에서도 2열부터 시작 */}
+        {/* 모바일에서도 2열부터 시작 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left">
           {/* 로고 및 설명 */}
           <div className="col-span-2 md:col-span-1">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../api/axios";   // ✅ 공용 axios 인스턴스 사용
+import api from "../api/axios"; 
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -24,7 +24,6 @@ export default function ContactSection() {
       setLoading(true);
       setStatus({ type: "", msg: "" });
 
-      // ✅ axios.js baseURL=/api → /api/contact/ 자동 처리
       await api.post("/contact/", form);
 
       setForm({ name: "", email: "", message: "" });

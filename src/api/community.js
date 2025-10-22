@@ -1,7 +1,6 @@
-// src/api/community.js
 import axios from "./axios";
 
-/** DRF pagination/배열 모두 대응 */
+// DRF pagination/배열 모두 대응 =
 function asPage(data) {
   if (!data) return { items: [], total: 0 };
   if (Array.isArray(data)) return { items: data, total: data.length };
@@ -11,9 +10,8 @@ function asPage(data) {
   };
 }
 
-/* =========================
- * Posts
- * =======================*/
+
+// Posts
 export async function listPosts({
   category = "story",
   q = "",
@@ -87,9 +85,8 @@ export async function incView(id) {
   } catch (_) {}
 }
 
-/* =========================
- * Comments
- * =======================*/
+
+// Comments
 export async function listComments({ postId, parent = null }) {
   const params = {
     post: postId,
@@ -124,11 +121,8 @@ export async function addReply({ postId, parentId, content }) {
   return data;
 }
 
-/* =========================
- * DM (1:1)
- * =======================*/
-/** 백엔드 스펙: POST /api/community/conversations/
- *  recipient_id (number) 또는 recipient_username (string) 중 하나만 전송 */
+
+// DM (1:1)
 export async function ensureConversation({ recipientId, recipientUsername }) {
   if (recipientId == null && !recipientUsername) {
     throw new Error("recipient 정보가 없습니다.");
@@ -142,7 +136,7 @@ export async function ensureConversation({ recipientId, recipientUsername }) {
   return data; // { id, participants, ... }
 }
 
-/** 메시지 목록: ?conversation=<id>&ordering=created_at */
+// 메시지 목록
 export async function listMessages(
   conversationId,
   { page = 1, pageSize = 100 } = {}
@@ -157,7 +151,7 @@ export async function listMessages(
   return Array.isArray(data) ? data : data?.results ?? [];
 }
 
-/** 메시지 전송 */
+// 메시지 전송 
 export async function sendMessage({ conversationId, content }) {
   const { data } = await axios.post("/community/messages/", {
     conversation: conversationId,

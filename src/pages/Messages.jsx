@@ -1,8 +1,7 @@
-// src/pages/Messages.jsx
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Input, Card, Empty, Spin, message as antdMessage } from "antd";
 import { listMessages, sendMessage as sendMessageApi } from "../api/community";
+import { Button, Input, Card, Empty, Spin, message as antdMessage } from "antd";
 import api from "../api/axios";
 
 function parseJwt(token) {
@@ -13,7 +12,7 @@ function parseJwt(token) {
   }
 }
 
-// ---------- 병합 유틸 (중복 제거 + 최신화) ----------
+// 병합 유틸 (중복 제거 + 최신화)
 function mergeMessages(prev, next) {
   const map = new Map();
   prev.forEach((m) => map.set(m.id, { ...m }));
@@ -43,12 +42,12 @@ export default function Messages() {
   const listRef = useRef(null);
   const endRef = useRef(null);
 
-  // ---------- scroll ----------
+  // 스크롤 
   const scrollToBottom = (behavior = "auto") => {
     endRef.current?.scrollIntoView({ behavior, block: "end" });
   };
 
-  // ---------- me ----------
+  // 자신 
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -78,7 +77,7 @@ export default function Messages() {
     };
   }, []);
 
-  // ---------- mine 판별 ----------
+  // 자신인지 판별 
   const isMineMessage = (m) => {
     if (m.__mine || m.__optimistic) return true;
     const myU = meRef.current.username;
@@ -91,7 +90,7 @@ export default function Messages() {
   };
   const tagMine = (msg) => ({ ...msg, __mine: isMineMessage(msg) });
 
-  // ---------- 읽음 처리 ----------
+  // 읽음 처리 
   const markRead = useCallback(async () => {
     if (!conversationId) return;
     try {
@@ -102,7 +101,7 @@ export default function Messages() {
     } catch {}
   }, [conversationId]);
 
-  // ---------- load ----------
+  // 로드
   const load = useCallback(
     async (mode = "init", { force = false, replace = false } = {}) => {
       if (!conversationId) return;
@@ -148,7 +147,7 @@ export default function Messages() {
     [conversationId, markRead]
   );
 
-  // ---------- polling & 대화방 전환 ----------
+  // polling & 대화방 전환 
   useEffect(() => {
     if (!conversationId) return;
 
@@ -160,7 +159,7 @@ export default function Messages() {
     return () => clearInterval(t);
   }, [conversationId]);
 
-  // ---------- send ----------
+  // 보내기 
   const send = async () => {
     const body = text.trim();
     if (!body || !conversationId) return;

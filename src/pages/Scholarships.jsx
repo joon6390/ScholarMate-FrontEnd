@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import api from "../api/axios";   // ✅ axios 인스턴스 사용
+import api from "../api/axios";   
+
 import "../assets/css/scholarships.css";
 
 export default function Scholarships() {
@@ -21,7 +22,7 @@ export default function Scholarships() {
   const [selectedScholarship, setSelectedScholarship] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ====== Toast ======
+  // 토스트 
   const [toast, setToast] = useState({ open: false, message: "", type: "success" });
   const toastTimerRef = useRef(null);
   const showToast = (message, type = "success", duration = 2000) => {
@@ -42,7 +43,7 @@ export default function Scholarships() {
     other: "기타",
   };
 
-  // ------- URL 정규화 -------
+  // URL 정규화 
   const normalizeUrl = (u) => {
     if (!u || typeof u !== "string") return null;
     const v = u.trim();
@@ -58,7 +59,7 @@ export default function Scholarships() {
     }
   };
 
-  // ====== API 호출 ======
+  // API 호출 
   const fetchScholarships = async () => {
     setLoading(true);
     setError(null);
@@ -73,7 +74,7 @@ export default function Scholarships() {
 
       const { data } = await api.get("/scholarships/", { params });
 
-      // ✅ 백엔드가 { data: [...] } 구조 반환
+      // 백엔드가 { data: [...] } 구조 반환
       const items = data?.data || [];
 
       const dataWithIds = items.map((item) => ({
@@ -112,7 +113,7 @@ export default function Scholarships() {
   useEffect(() => { fetchScholarships(); }, [page, perPage, selectedType, sortOrder, searchQuery]);
   useEffect(() => { fetchFavorites(); }, []);
 
-  // ====== UI 핸들러 ======
+  // UI 핸들러 
   const openModal = (scholarship) => { setSelectedScholarship(scholarship); setIsModalOpen(true); };
   const closeModal = () => { setSelectedScholarship(null); setIsModalOpen(false); };
 
@@ -154,7 +155,7 @@ export default function Scholarships() {
   const startIdx = totalCount === 0 ? 0 : (page - 1) * perPage + 1;
   const endIdx = Math.min(page * perPage, totalCount);
 
-  // ✅ 페이지 버튼 생성
+  // 페이지 버튼 생성
   const getPageList = (cur, total) => {
     const maxLen = 7;
     if (total <= maxLen) return Array.from({ length: total }, (_, i) => i + 1);
@@ -204,7 +205,7 @@ export default function Scholarships() {
         : scholarships.length === 0 ? <div className="no-results">검색 결과가 없습니다.</div>
         : (
           <>
-            {/* ✅ 테이블 */}
+            {/* 테이블 */}
             <div className="hidden md:block overflow-x-auto">
               <table className="scholarships-table w-full">
                 <thead>
@@ -242,7 +243,7 @@ export default function Scholarships() {
               </table>
             </div>
 
-            {/* ✅ 모바일 카드 */}
+            {/* 모바일 카드 */}
             <div className="md:hidden space-y-4">
               {scholarships.map((item) => {
                 const href = normalizeUrl(item.url);
@@ -262,7 +263,7 @@ export default function Scholarships() {
               })}
             </div>
 
-            {/* ✅ 페이지네이션 */}
+            {/* 페이지네이션 */}
             <div className="pagination flex items-center justify-center gap-2 mt-4">
               <span className="range-text">{startIdx}-{endIdx} / 총 {totalCount}건</span>
               <button onClick={() => setPage(1)} disabled={page === 1}>⏮</button>
@@ -306,7 +307,7 @@ export default function Scholarships() {
         </div>
       )}
 
-      {/* Toast */}
+      {/* 토스트 */}
       <div aria-live="polite" aria-atomic="true" className="toast-root">
         {toast.open && (
           <div className={`toast-card ${toast.type}`} role="status">{toast.message}</div>

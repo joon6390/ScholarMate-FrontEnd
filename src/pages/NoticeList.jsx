@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { fetchNotices, createNotice } from "../api/notices";
+import { fetchMe } from "../api/user";
+
 import {
   Pagination,
   Input,
@@ -12,8 +15,7 @@ import {
   Switch,
   message,
 } from "antd";
-import { fetchNotices, createNotice } from "../api/notices";
-import { fetchMe } from "../api/user";
+
 
 const { Search } = Input;
 
@@ -240,7 +242,7 @@ export default function NoticeList() {
         </div>
       )}
 
-      {/* ✍️ 글쓰기 모달 (관리자 전용) */}
+      {/* 글쓰기 모달 (관리자 전용) */}
       <Modal
         title="새 공지 작성"
         open={modalOpen}

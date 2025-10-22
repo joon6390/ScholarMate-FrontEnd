@@ -38,7 +38,7 @@ export default function FeatureSection() {
           </p>
         </div>
 
-        {/* ✅ 항상 2×2 정사각형 레이아웃 */}
+        {/* 항상 2×2 정사각형 레이아웃 */}
         <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {features.map((item, index) => (
             <div

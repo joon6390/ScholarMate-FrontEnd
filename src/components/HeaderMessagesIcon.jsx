@@ -49,7 +49,7 @@ export default function HeaderMessagesIcon({ intervalMs = 60000 }) {
             });
           }
         } catch {
-          /* ignore */
+          /* 무시 */
         }
       }
     })();
@@ -176,7 +176,7 @@ export default function HeaderMessagesIcon({ intervalMs = 60000 }) {
 
       {open && isLoggedIn && (
         <>
-          {/* 🔹 모바일: 전체 화면 오버레이 */}
+          {/* 모바일: 전체 화면 오버레이 */}
           <div
             className="fixed inset-0 z-40 bg-black/40 sm:hidden"
             onClick={() => setOpen(false)}

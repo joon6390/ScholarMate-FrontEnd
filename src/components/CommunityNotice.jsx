@@ -1,10 +1,8 @@
-// src/components/CommunityNotice.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "../api/axios";
 
-// Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/swiper-bundle.css";
@@ -147,7 +145,7 @@ const CommunityNotice = () => {
     };
   }, []);
 
-  // ✅ 모바일 / 데스크탑 글 개수 제한
+  // 모바일 / 데스크탑 글 개수 제한
   const communityLatestForRender = useMemo(() => {
     const base = [...communityItems];
     const filtered = popularItem ? base.filter((p) => p.id !== popularItem.id) : base;
@@ -189,7 +187,7 @@ const CommunityNotice = () => {
               </Link>
             </div>
 
-            {/* ✅ 인기글 강조 */}
+            {/* 인기글 강조 */}
             {!popularLoading && popularItem && (
               <>
                 <div className="mb-3 p-3 rounded-md bg-yellow-50 border border-yellow-200">

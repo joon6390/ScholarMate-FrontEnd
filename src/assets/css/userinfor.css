@@ -1,6 +1,3 @@
-/* =========================
-   📦 프로필 박스
-   ========================= */
 .page-wrapper {
   display: flex;
   justify-content: center;
@@ -8,7 +5,6 @@
   min-height: 100vh;
   box-sizing: border-box;
 }
-
 .profile-box {
   background: #ffffff;
   width: 100%;
@@ -18,7 +14,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin: 20px auto 50px;
 }
-
 .title {
   font-size: 28px;
   font-weight: bold;
@@ -26,17 +21,12 @@
   margin-bottom: 30px;
   color: #495057;
 }
-
-/* =========================
-   📋 폼 기본 스타일
-   ========================= */
 .form-row {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
-
 .form-label {
   flex: 0 0 160px;
   font-size: 16px;
@@ -44,7 +34,6 @@
   color: #495057;
   margin-bottom: 10px;
 }
-
 .form-input,
 .form-select,
 .form-textarea {
@@ -64,22 +53,16 @@
   border-color: #007bff;
   outline: none;
 }
-
 .form-group {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
-
 .checkbox-group {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
-
-/* =========================
-   🎛 버튼
-   ========================= */
 .form-button {
   padding: 10px 15px;
   font-size: 14px;
@@ -93,7 +76,6 @@
 .form-button:hover {
   background-color: #0056b3;
 }
-
 .save-btn {
   display: block;
   width: 100%;
@@ -111,10 +93,6 @@
 .save-btn:hover {
   background-color: #0056b3;
 }
-
-/* =========================
-   🪟 모달
-   ========================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -124,7 +102,6 @@
   justify-content: center;
   z-index: 1000;
 }
-
 .modal {
   background: white;
   width: 400px;
@@ -139,8 +116,6 @@
   font-size: 20px;
   font-weight: bold;
 }
-
-/* 닫기 버튼 */
 .close-btn {
   position: absolute;
   top: 10px;
@@ -158,8 +133,6 @@
 .close-btn:hover {
   background: #0056b3;
 }
-
-/* 드롭다운 */
 .dropdown-list {
   list-style: none;
   padding: 0;
@@ -178,11 +151,6 @@
   background: #f1f1f1;
 }
 
-/* =========================
-   📱 반응형 디자인
-   ========================= */
-
-/* 태블릿 (≤768px) */
 @media (max-width: 768px) {
   .profile-box {
     padding: 30px;
@@ -224,7 +192,6 @@
   }
 }
 
-/* 모바일 (≤480px) */
 @media (max-width: 480px) {
   .profile-box {
     padding: 20px;
