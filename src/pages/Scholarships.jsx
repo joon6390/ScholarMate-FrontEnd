@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import api from "../api/axios";   
-
+import api from "../api/axios";
 import "../assets/css/scholarships.css";
 
 export default function Scholarships() {
@@ -15,14 +14,24 @@ export default function Scholarships() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
-  const [selectedType, setSelectedType] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
+  // UI 코드값
+  const [selectedType, setSelectedType] = useState("");   // regional | academic | income_based | special_talent | other
+  const [sortOrder, setSortOrder] = useState("");         // '' | 'end_date'
   const [favorites, setFavorites] = useState(new Set());
 
   const [selectedScholarship, setSelectedScholarship] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 토스트 
+  // ====== (1) 코드값 → 백엔드 한글값 매핑 ======
+  const TYPE_KR = {
+    regional: "지역연고",
+    academic: "성적우수",
+    income_based: "소득구분",
+    special_talent: "특기자",
+    other: "기타",
+  };
+
+  // ====== 토스트 ======
   const [toast, setToast] = useState({ open: false, message: "", type: "success" });
   const toastTimerRef = useRef(null);
   const showToast = (message, type = "success", duration = 2000) => {
@@ -35,15 +44,7 @@ export default function Scholarships() {
   };
   useEffect(() => () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }, []);
 
-  const scholarshipTypeMapping = {
-    regional: "지역연고",
-    academic: "성적우수",
-    income_based: "소득구분",
-    special_talent: "특기자",
-    other: "기타",
-  };
-
-  // URL 정규화 
+  // ====== URL 정규화 ======
   const normalizeUrl = (u) => {
     if (!u || typeof u !== "string") return null;
     const v = u.trim();
@@ -59,31 +60,41 @@ export default function Scholarships() {
     }
   };
 
-  // API 호출 
+  // ====== 응답 파서 (배열 / DRF / 커스텀) ======
+  const parseListResponse = (data) => {
+    if (Array.isArray(data)) return { items: data, count: data.length };
+    if (data && Array.isArray(data.results))
+      return { items: data.results, count: data.count ?? data.results.length };
+    if (data && Array.isArray(data.data)) {
+      const count = data.total ?? data.count ?? data.data.length;
+      return { items: data.data, count };
+    }
+    return { items: [], count: 0 };
+  };
+
+  // ====== (2) API 호출 ======
   const fetchScholarships = async () => {
     setLoading(true);
     setError(null);
     try {
+      // 프론트 코드값을 백엔드가 쓰는 한글(product_type)로 변환
+      const typeParam = selectedType ? (TYPE_KR[selectedType] ?? selectedType) : undefined;
+
       const params = {
         page,
-        page_size: perPage,
-        search: searchQuery || undefined,
-        type: scholarshipTypeMapping[selectedType] || undefined,
-        ordering: sortOrder || undefined,
+        perPage: Number.isFinite(perPage) ? perPage : 10,     // ✅ 백엔드 규약
+        search: (searchQuery || "").trim() || undefined,
+        type: typeParam,                                      // ✅ '지역연고' 등
+        sort: (sortOrder || "").trim() || undefined,          // ✅ 'end_date'
       };
 
       const { data } = await api.get("/scholarships/", { params });
 
-      // 백엔드가 { data: [...] } 구조 반환
-      const items = data?.data || [];
-
-      const dataWithIds = items.map((item) => ({
-        ...item,
-        id: item.product_id,
-      }));
+      const { items, count } = parseListResponse(data);
+      const dataWithIds = items.map((item) => ({ ...item, id: item.product_id }));
 
       setScholarships(dataWithIds);
-      setTotalCount(items.length);
+      setTotalCount(Number.isFinite(count) ? count : dataWithIds.length);
     } catch {
       setError("데이터를 불러오는 데 실패했습니다.");
     } finally {
@@ -100,26 +111,21 @@ export default function Scholarships() {
       });
       const ids = (data || []).map((item) => item.scholarship.product_id);
       setFavorites(new Set(ids));
-    } catch {
-      // 무시
-    }
+    } catch { /* 무시 */ }
   };
 
   useEffect(() => {
     document.body.classList.add("scholarships-page");
     return () => document.body.classList.remove("scholarships-page");
   }, []);
-
   useEffect(() => { fetchScholarships(); }, [page, perPage, selectedType, sortOrder, searchQuery]);
   useEffect(() => { fetchFavorites(); }, []);
 
-  // UI 핸들러 
+  // ====== UI 핸들러 ======
   const openModal = (scholarship) => { setSelectedScholarship(scholarship); setIsModalOpen(true); };
   const closeModal = () => { setSelectedScholarship(null); setIsModalOpen(false); };
-
   const handleTypeChange = (e) => { setSelectedType(e.target.value); setPage(1); };
   const handleSortChange = (e) => { setSortOrder(e.target.value); setPage(1); };
-
   const doSearch = () => { setSearchQuery(searchInput.trim()); setPage(1); };
   const clearSearch = () => { setSearchInput(""); setSearchQuery(""); setPage(1); };
 
@@ -127,17 +133,15 @@ export default function Scholarships() {
     const id = item.product_id;
     const isFavorited = favorites.has(id);
     const token = localStorage.getItem("token");
-
     if (!token) { showToast("로그인이 필요합니다.", "error", 2200); return; }
 
     const url = isFavorited ? "/scholarships/wishlist/toggle/" : "/scholarships/wishlist/add-from-api/";
-
     try {
-      const { status } = await api.post(url,
+      const { status } = await api.post(
+        url,
         isFavorited ? { product_id: id, action: "remove" } : item,
         { headers: { Authorization: `JWT ${token}` } }
       );
-
       if (status !== 200 && status !== 201) throw new Error("서버 오류");
 
       setFavorites((prev) => {
@@ -151,23 +155,24 @@ export default function Scholarships() {
     }
   };
 
-  const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
+  // ====== 페이지네이션 계산 ======
+  const totalPages = Math.max(1, Math.ceil((totalCount || 0) / perPage));
   const startIdx = totalCount === 0 ? 0 : (page - 1) * perPage + 1;
-  const endIdx = Math.min(page * perPage, totalCount);
+  const endIdx = Math.min(page * perPage, totalCount || 0);
 
-  // 페이지 버튼 생성
   const getPageList = (cur, total) => {
-    const maxLen = 7;
-    if (total <= maxLen) return Array.from({ length: total }, (_, i) => i + 1);
-    const show = new Set([1, 2, total - 1, total, cur, cur - 1, cur + 1]);
-    const list = []; let prev = 0;
-    for (let i = 1; i <= total; i++) {
-      if (show.has(i) || (i >= cur - 2 && i <= cur + 2)) {
-        if (prev && i - prev > 1) list.push("...");
-        list.push(i); prev = i;
-      }
-    }
-    return list;
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages = [];
+    const push = (p) => { if (pages[pages.length - 1] !== p) pages.push(p); };
+    const ellipsis = () => { if (pages[pages.length - 1] !== "…") pages.push("…"); };
+    push(1); push(2);
+    const start = Math.max(3, cur - 1);
+    const end   = Math.min(total - 2, cur + 1);
+    if (start > 3) ellipsis();
+    for (let p = start; p <= end; p++) push(p);
+    if (end < total - 2) ellipsis();
+    push(total - 1); push(total);
+    return pages;
   };
 
   return (
@@ -176,11 +181,14 @@ export default function Scholarships() {
         <h1 className="text-3xl font-bold mb-8 pb-4 border-b border-gray-300 text-gray-900">장학금 목록</h1>
 
         <div className="search-and-filter">
-          <input type="text" placeholder="장학 사업명 검색"
+          <input
+            type="text"
+            placeholder="장학 사업명 검색"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") doSearch(); }}
-            className="search-input" />
+            className="search-input"
+          />
           <button onClick={doSearch} className="search-btn text-white">검색</button>
           <button onClick={clearSearch} className="search-clear-btn bg-white text-black border border-gray-300 rounded px-3">검색어 지우기</button>
 
@@ -199,13 +207,15 @@ export default function Scholarships() {
           </select>
         </div>
 
-        {/* === 목록 === */}
-        {loading ? <div className="loading">로딩 중...</div>
-        : error ? <div className="error">{error}</div>
-        : scholarships.length === 0 ? <div className="no-results">검색 결과가 없습니다.</div>
-        : (
+        {loading ? (
+          <div className="loading">로딩 중...</div>
+        ) : error ? (
+          <div className="error">{error}</div>
+        ) : scholarships.length === 0 ? (
+          <div className="no-results">검색 결과가 없습니다.</div>
+        ) : (
           <>
-            {/* 테이블 */}
+            {/* 데스크톱 테이블 */}
             <div className="hidden md:block overflow-x-auto">
               <table className="scholarships-table w-full">
                 <thead>
@@ -228,11 +238,18 @@ export default function Scholarships() {
                         <td>{item.recruitment_start} ~ {item.recruitment_end}</td>
                         <td><button onClick={() => openModal(item)} className="details-btn">상세정보 보기</button></td>
                         <td>
-                          {href ? <a href={href} target="_blank" rel="noopener noreferrer" className="details-btn">홈페이지 보기</a>
-                               : <span className="text-gray-400">홈페이지 없음</span>}
+                          {href ? (
+                            <a href={href} target="_blank" rel="noopener noreferrer" className="details-btn">홈페이지 보기</a>
+                          ) : (
+                            <span className="text-gray-400">홈페이지 없음</span>
+                          )}
                         </td>
                         <td>
-                          <button onClick={() => handleFavoriteToggle(item)} className="favorite-btn" title={favorites.has(item.product_id) ? "관심 해제" : "관심 등록"}>
+                          <button
+                            onClick={() => handleFavoriteToggle(item)}
+                            className="favorite-btn"
+                            title={favorites.has(item.product_id) ? "관심 해제" : "관심 등록"}
+                          >
                             {favorites.has(item.product_id) ? "❤️" : "🤍"}
                           </button>
                         </td>
@@ -254,9 +271,14 @@ export default function Scholarships() {
                     <div className="text-xs text-gray-600 mb-2">{item.recruitment_start} ~ {item.recruitment_end}</div>
                     <div className="flex items-center justify-between text-xs">
                       <button onClick={() => openModal(item)} className="px-2 py-1 bg-blue-600 text-white rounded">상세</button>
-                      {href ? <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">홈페이지</a>
-                            : <span className="text-gray-400">없음</span>}
-                      <button onClick={() => handleFavoriteToggle(item)} className="ml-2 text-lg">{favorites.has(item.product_id) ? "❤️" : "🤍"}</button>
+                      {href ? (
+                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">홈페이지</a>
+                      ) : (
+                        <span className="text-gray-400">없음</span>
+                      )}
+                      <button onClick={() => handleFavoriteToggle(item)} className="ml-2 text-lg">
+                        {favorites.has(item.product_id) ? "❤️" : "🤍"}
+                      </button>
                     </div>
                   </div>
                 );
@@ -264,17 +286,37 @@ export default function Scholarships() {
             </div>
 
             {/* 페이지네이션 */}
-            <div className="pagination flex items-center justify-center gap-2 mt-4">
+            <div className="pagination">
               <span className="range-text">{startIdx}-{endIdx} / 총 {totalCount}건</span>
-              <button onClick={() => setPage(1)} disabled={page === 1}>⏮</button>
-              <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>‹</button>
+
+              <button className="icon-btn" onClick={() => setPage(1)} disabled={page === 1} title="처음">⏮</button>
+              <button className="icon-btn" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} title="이전">‹</button>
+
               {getPageList(page, totalPages).map((p, idx) =>
-                p === "..." ? <span key={idx}>…</span>
-                : <button key={p} onClick={() => setPage(p)} className={p === page ? "is-current" : ""}>{p}</button>
+                p === "…" ? (
+                  <span key={`ellipsis-${idx}`} className="ellipsis">…</span>
+                ) : (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`page-btn ${p === page ? "is-current" : ""}`}
+                    aria-current={p === page ? "page" : undefined}
+                    title={`${p}페이지`}
+                  >
+                    {p}
+                  </button>
+                )
               )}
-              <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>›</button>
-              <button onClick={() => setPage(totalPages)} disabled={page === totalPages}>⏭</button>
-              <select value={perPage} onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}>
+
+              <button className="icon-btn" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages} title="다음">›</button>
+              <button className="icon-btn" onClick={() => setPage(totalPages)} disabled={page === totalPages} title="맨끝">⏭</button>
+
+              <select
+                className="perpage-select"
+                value={perPage}
+                onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}
+                aria-label="페이지당 항목 수"
+              >
                 <option value={10}>10개씩</option>
                 <option value={20}>20개씩</option>
                 <option value={50}>50개씩</option>
@@ -301,7 +343,10 @@ export default function Scholarships() {
               <p><strong>자격제한:</strong> {selectedScholarship.eligibility_restrictions}</p>
               <p><strong>추천필요여부:</strong> {selectedScholarship.recommendation_required ? "필요" : "불필요"}</p>
               <p><strong>제출서류:</strong> {selectedScholarship.required_documents_details}</p>
-              <p><strong>홈페이지:</strong> {normalizeUrl(selectedScholarship.url) ? <a href={normalizeUrl(selectedScholarship.url)} target="_blank" rel="noopener noreferrer">홈페이지 이동</a> : <span>주소 없음</span>}</p>
+              <p><strong>홈페이지:</strong> {normalizeUrl(selectedScholarship.url)
+                ? <a href={normalizeUrl(selectedScholarship.url)} target="_blank" rel="noopener noreferrer">홈페이지 이동</a>
+                : <span>주소 없음</span>}
+              </p>
             </div>
           </div>
         </div>
