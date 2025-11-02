@@ -190,7 +190,7 @@ const CommunityNotice = () => {
             {/* 인기글 강조 */}
             {!popularLoading && popularItem && (
               <>
-                <div className="mb-3 p-3 rounded-md bg-yellow-50 border border-yellow-200">
+                <div className="mb-3 p-3 rounded-md bg-blue-50 border border-blue-200">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="flex items-center min-w-0">
                       <FaChevronRight className="mr-[8px] text-[#111] shrink-0" />
@@ -210,7 +210,7 @@ const CommunityNotice = () => {
                       <Stat icon="💬" value={popularItem.comment_count} title="댓글" />
                       <Stat icon="👁" value={popularItem.view_count} title="조회수" />
                       <span className="text-[11px] text-gray-500">{formatDate(popularItem.created_at)}</span>
-                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">
+                      <span className="text-[11px] px-2 py-0.5 rounded-full text-black-800 border border-blue-200">
                         인기
                       </span>
                     </div>
@@ -294,7 +294,7 @@ const CommunityNotice = () => {
             ) : (
               <>
                 {pinnedItem && (
-                  <div className="mb-3 p-3 rounded-md bg-yellow-50 border border-yellow-200">
+                  <div className="mb-3 p-3 rounded-md bg-blue-50 border border-blue-200">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="flex items-center min-w-0">
                         <FaChevronRight className="mr-[8px] text-[#111] shrink-0" />
@@ -308,7 +308,7 @@ const CommunityNotice = () => {
                       </div>
                       <div className="flex items-center gap-2 shrink-0 text-[11px]">
                         <span className="text-[11px] text-gray-500">{formatDate(pinnedItem.created_at)}</span>
-                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">
+                        <span className="text-[11px] px-2 py-0.5 rounded-full text-black-800 border border-blue-200">
                           고정
                         </span>
                       </div>

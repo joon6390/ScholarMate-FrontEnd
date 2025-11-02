@@ -1,6 +1,7 @@
+// src/pages/Recommendation.jsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios";  
+import api from "../api/axios";
 
 const DUMMY_RECOMMENDATIONS = [
   {
@@ -25,22 +26,30 @@ const DUMMY_RECOMMENDATIONS = [
 
 export default function Recommendation() {
   const [recommendations, setRecommendations] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const atEnd = visibleCount >= recommendations.length;
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [headerPad, setHeaderPad] = useState(96);
 
   const [favorites, setFavorites] = useState(new Set());
-
   const [selected, setSelected] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // 선별 이유 모달
+  const [reasonOpen, setReasonOpen] = useState(false);
+  const [reasonTarget, setReasonTarget] = useState(null);
+
   const navigate = useNavigate();
 
-  // URL 정규화 
+  // URL 정규화
   const resolveUrl = (u) => {
     if (!u) return null;
     const v = String(u).trim();
-    const invalid = new Set(["", "#", "-", "null", "none", "n/a", "N/A", "해당없음", "없음", "미정", "준비중"]);
+    const invalid = new Set([
+      "", "#", "-", "null", "none", "n/a", "N/A", "해당없음", "없음", "미정", "준비중",
+    ]);
     if (invalid.has(v) || invalid.has(v.toLowerCase())) return null;
     const withScheme = /^https?:\/\//i.test(v) ? v : `https://${v.replace(/^\/+/, "")}`;
     try {
@@ -68,10 +77,9 @@ export default function Recommendation() {
     return () => window.removeEventListener("resize", updatePad);
   }, []);
 
-  // 토스트 
+  // 토스트
   const [toast, setToast] = useState({ open: false, message: "", type: "success" });
   const toastTimerRef = useRef(null);
-
   const showToast = (message, type = "success", duration = 2000) => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToast({ open: true, message, type });
@@ -102,16 +110,30 @@ export default function Recommendation() {
         const recs = Array.isArray(data?.scholarships) ? data.scholarships : [];
         setRecommendations(recs.length ? recs : DUMMY_RECOMMENDATIONS);
       } catch (err) {
-        let msg = "예상치 못한 오류가 발생했습니다.";
-        if (String(err.message).includes("Network"))
-          msg = "네트워크 오류: 서버에 연결할 수 없습니다.";
-        else if (String(err.message).includes("401")) {
-          msg = "로그인 세션이 만료되었습니다. 다시 로그인해주세요.";
+        const status = err?.response?.status;
+        const detail =
+          err?.response?.data?.detail ||
+          err?.response?.data?.message ||
+          err?.response?.data?.error ||
+          "";
+
+        // 프로필/장학정보 없음
+        if (status === 404 || /profile|user.?info|장학.?정보|not\s*found/i.test(String(detail))) {
+          setError("먼저 장학 정보를 입력하세요.");
+          setLoading(false);
+          return;
+        }
+
+        if (String(err.message).includes("Network")) {
+          setError("네트워크 오류: 서버에 연결할 수 없습니다.");
+        } else if (String(err.message).includes("401") || status === 401) {
+          setError("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
           localStorage.removeItem("token");
           localStorage.removeItem("refreshToken");
           navigate("/login");
-        } else msg = `오류 발생: ${err.message}`;
-        setError(msg);
+        } else {
+          setError(`오류 발생: ${err.message}`);
+        }
       } finally {
         setLoading(false);
       }
@@ -119,7 +141,7 @@ export default function Recommendation() {
     fetchRecommendations();
   }, [navigate]);
 
-  // 찜 목록 로드 
+  // 찜 목록 로드
   useEffect(() => {
     const loadFavorites = async () => {
       try {
@@ -139,7 +161,29 @@ export default function Recommendation() {
   const openModal = (item) => { setSelected(item); setIsModalOpen(true); };
   const closeModal = () => { setSelected(null); setIsModalOpen(false); };
 
-  // 찜 토글 
+  // 선별 이유: JSON → 문자열 배열
+  const extractReasons = (raw) => {
+    if (!raw) return [];
+    let data = raw;
+    if (typeof data === "string") {
+      try { data = JSON.parse(data); } catch { /* 그냥 문자열 사용 */ }
+    }
+    if (Array.isArray(data)) return data.map(String);
+
+    if (typeof data === "object") {
+      const out = [];
+      for (const [k, v] of Object.entries(data)) {
+        if (Array.isArray(v)) v.forEach((x) => out.push(`${k}: ${x}`));
+        else if (v && typeof v === "object") {
+          for (const [k2, v2] of Object.entries(v)) out.push(`${k}/${k2}: ${v2}`);
+        } else if (v !== undefined && v !== null && v !== "") out.push(`${k}: ${v}`);
+      }
+      return out.length ? out : [JSON.stringify(data)];
+    }
+    return [String(data)];
+  };
+
+  // 찜 토글
   const toggleFavorite = async (item) => {
     const id = item.product_id ?? item.id;
     const isFavorited = favorites.has(id);
@@ -154,7 +198,8 @@ export default function Recommendation() {
       : "/scholarships/wishlist/add-from-api/";
 
     try {
-      const { status } = await api.post(url,
+      const { status } = await api.post(
+        url,
         isFavorited ? { product_id: id, action: "remove" } : item,
         { headers: { Authorization: `JWT ${token}` } }
       );
@@ -221,30 +266,44 @@ export default function Recommendation() {
     );
   }
 
+  // 에러 렌더링
   if (error) {
+    const isProfileMissing = error === "먼저 장학 정보를 입력하세요.";
     return (
       <Wrapper>
-        <div className="flex flex-col items-center">
-          <div className="text-lg sm:text-xl font-semibold text-red-600 mb-4 text-center">
-            {error}
+        {isProfileMissing ? (
+          <div className="mx-auto w-full max-w-2xl rounded-xl bg-white shadow-lg border border-gray-200 p-6 text-center">
+            <div className="mx-auto mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-50">
+              <span className="text-blue-600 text-lg">ℹ️</span>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">추천을 보기 전에</h2>
+            <p className="text-gray-700">
+              맞춤 추천을 위해 <strong>나의 장학 정보</strong>를 먼저 입력해 주세요.
+            </p>
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={() => navigate("/userinfor")}
+                className="px-5 py-2.5 rounded-md bg-gray-900 text-white hover:bg-black transition"
+              >
+                나의 장학 정보 입력하러 가기
+              </button>
+            </div>
           </div>
-          {error.includes("로그인") && (
-            <button
-              onClick={() => navigate("/login")}
-              className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
-            >
-              로그인하기
-            </button>
-          )}
-          {error.includes("나의 장학 정보") && (
-            <button
-              onClick={() => navigate("/userinfor")}
-              className="mt-3 px-4 py-2 sm:px-6 sm:py-3 bg-gray-900 text-white rounded-md shadow hover:bg-blue-500 transition"
-            >
-              나의 장학 정보 입력하러 가기
-            </button>
-          )}
-        </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            <div className="text-lg sm:text-xl font-semibold text-red-600 mb-4 text-center">
+              {error}
+            </div>
+            {error.includes("로그인") && (
+              <button
+                onClick={() => navigate("/login")}
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+              >
+                로그인하기
+              </button>
+            )}
+          </div>
+        )}
       </Wrapper>
     );
   }
@@ -266,7 +325,7 @@ export default function Recommendation() {
       </h1>
 
       <div className="space-y-4 sm:space-y-6">
-        {recommendations.map((s) => {
+        {recommendations.slice(0, visibleCount).map((s) => {
           const id = s.product_id ?? s.id;
           const isFav = favorites.has(id);
           const homepage = urlFor(s);
@@ -291,6 +350,14 @@ export default function Recommendation() {
 
                 {/* 버튼 그룹 */}
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                  {/* 선별 이유 */}
+                  <button
+                    onClick={() => { setReasonTarget(s); setReasonOpen(true); }}
+                    className="w-full sm:w-auto px-3 py-2 text-sm bg-white rounded-md border hover:bg-gray-50 text-center"
+                  >
+                    선별 이유
+                  </button>
+
                   <button
                     onClick={() => openModal(s)}
                     className="w-full sm:w-auto px-3 py-2 text-sm bg-gray-100 rounded-md border hover:bg-gray-200 text-center"
@@ -331,6 +398,26 @@ export default function Recommendation() {
           );
         })}
       </div>
+
+      {/* 더보기 버튼: 항상 표시, 끝에서 비활성화 */}
+      {recommendations.length > 0 && (
+        <div className="mt-6 flex justify-center">
+          <button
+            disabled={atEnd}
+            onClick={() =>
+              setVisibleCount((c) => Math.min(c + 5, recommendations.length))
+            }
+            className={
+              "px-5 py-2.5 rounded-md transition shadow " +
+              (atEnd
+                ? "bg-gray-300 text-white cursor-not-allowed"
+                : "bg-gray-900 text-white hover:bg-black")
+            }
+          >
+            {atEnd ? "모두 확인했습니다" : "더보기"}
+          </button>
+        </div>
+      )}
 
       {/* 상세 모달 */}
       {isModalOpen && selected && (
@@ -408,6 +495,45 @@ export default function Recommendation() {
                 {favorites.has(selected.product_id ?? selected.id) ? "관심 해제" : "관심 등록"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 선별 이유 모달 */}
+      {reasonOpen && reasonTarget && (
+        <div
+          className="fixed inset-0 bg-black/40 z-50 overflow-y-auto"
+          style={{ paddingTop: headerPad + 24, paddingBottom: 24 }}
+          onClick={() => setReasonOpen(false)}
+        >
+          <div
+            className="w-full max-w-lg mx-auto bg-white rounded-lg shadow-xl p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute right-4 top-3 text-sm text-gray-500 hover:text-gray-800"
+              onClick={() => setReasonOpen(false)}
+              aria-label="닫기"
+            >
+              닫기
+            </button>
+
+            <h3 className="text-xl font-bold mb-4">선별 이유</h3>
+
+            {(() => {
+              const reasons = extractReasons(
+                reasonTarget.Reason ?? reasonTarget.reason ?? reasonTarget.reasons
+              );
+              return reasons.length ? (
+                <ul className="list-disc pl-5 space-y-1 text-sm text-gray-800">
+                  {reasons.map((r, i) => (
+                    <li key={i}>{String(r)}</li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="text-sm text-gray-500">선별 이유 정보가 없습니다.</div>
+              );
+            })()}
           </div>
         </div>
       )}

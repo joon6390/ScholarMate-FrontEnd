@@ -209,7 +209,7 @@ export default function NoticeList() {
               <Link to={`/notice/${n.id}`} className="block">
                 <div className="flex items-center gap-2 mb-1">
                   {n.is_pinned && (
-                    <span className="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">
+                    <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">
                       고정
                     </span>
                   )}

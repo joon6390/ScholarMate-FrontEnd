@@ -111,7 +111,7 @@ export default function NoticeDetail() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-2">
               {item.is_pinned && (
-                <span className="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">고정</span>
+                <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">고정</span>
               )}
               <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900">{item.title}</h1>
             </div>

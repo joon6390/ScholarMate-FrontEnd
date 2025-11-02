@@ -39,22 +39,35 @@ export default function Header({ isLoggedIn, setIsLoggedIn, goToSection }) {
     <>
       {/*  헤더  */}
       <header className="header flex flex-wrap justify-between items-center px-4 py-3 bg-white shadow-md sticky top-0 z-50">
-        {/* 왼쪽 */}
-        <div className="flex items-center mb-2 md:mb-0">
-          <Link to="/" className="flex items-center">
-            <img src={logo} alt="Logo" className="logo h-10 w-auto" />
-            <h1 className="text-xl md:text-2xl font-bold ml-2">ScholarMate</h1>
-          </Link>
-        </div>
+  {/* 왼쪽 */}
+  <div className="flex items-center mb-2 md:mb-0 shrink-0">
+    <Link to="/" className="flex items-center">
+      <img src={logo} alt="Logo" className="logo h-10 w-auto" />
+      <h1 className="text-xl md:text-2xl font-bold ml-2">ScholarMate</h1>
+    </Link>
+  </div>
 
-        {/* 네비게이션 */}
-        <nav className="nav flex gap-3 overflow-x-auto scrollbar-hide whitespace-nowrap text-xs sm:text-sm md:text-base mb-2 md:mb-0 w-full md:w-auto justify-center">
-          <Link to="/scholarships" className="nav-btn">전체 장학금</Link>
-          <Link to="/recommendation" className="nav-btn">추천 장학금</Link>
-          <Link to="/interest" className="nav-btn">관심 장학금</Link>
-          <Link to="/calendar" className="nav-btn">나의 장학 캘린더</Link>
-          <Link to="/Userinfor" className="nav-btn">나의 장학 정보</Link>
-        </nav>
+  {/* 네비게이션 */}
+  <nav
+    className="
+      nav flex flex-1 min-w-0 gap-2
+      overflow-x-auto md:overflow-x-hidden     /* 모바일: 스크롤, md↑: 스크롤 제거 */
+      whitespace-nowrap md:whitespace-normal    /* 모바일: 한 줄, md↑: 줄바꿈 허용 */
+      md:flex-wrap                              /* md↑: 필요 시 두 줄로 감싸기 */
+      text-xs sm:text-sm md:text-base
+      mb-2 md:mb-0
+      w-full md:w-auto
+      justify-start md:justify-center
+      px-2 md:px-0
+      scrollbar-hide
+    "
+  >
+    <Link to="/scholarships"    className="nav-btn">전체 장학금</Link>
+    <Link to="/recommendation"  className="nav-btn">추천 장학금</Link>
+    <Link to="/interest"        className="nav-btn">관심 장학금</Link>
+    <Link to="/calendar"        className="nav-btn">나의 장학 캘린더</Link>
+    <Link to="/Userinfor"       className="nav-btn">나의 장학 정보</Link>
+  </nav>
 
         {/* 오른쪽 */}
         <div className="header-right flex flex-row gap-2 items-center whitespace-nowrap">
