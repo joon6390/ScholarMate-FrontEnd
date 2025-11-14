@@ -4,7 +4,7 @@ import isTokenExpired from "./auth";
 // Axios 공통 인스턴스 (JWT Bearer + 자동 리프레시)
 const instance = axios.create({
   baseURL: "/api",
-  timeout: 15000,
+  timeout: 60000,
   withCredentials:
     String(import.meta.env.VITE_WITH_CREDENTIALS || "").toLowerCase() === "true",
   headers: { Accept: "application/json" },
