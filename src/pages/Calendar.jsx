@@ -66,20 +66,25 @@ export default function CalendarPage() {
   const calendarShellClass = useMemo(
     () =>
       [
-        // 컨테이너
         "[&_.react-calendar]:w-full",
         "[&_.react-calendar]:border-0",
-        // 타일 공통
-        "[&_.react-calendar__tile]:w-[70px]",
-        "[&_.react-calendar__tile]:h-[70px]",
+        "[&_.react-calendar]:py-16", // 
+        "[&_.react-calendar__month-view__weekdays]:mb-4",
+
+        "[&_.react-calendar__tile]:w-[70px]", 
+        "[&_.react-calendar__tile]:h-[80px]",     
+        "lg:[&_.react-calendar__tile]:h-[100px]", 
+
         "[&_.react-calendar__tile]:flex",
         "[&_.react-calendar__tile]:items-center",
         "[&_.react-calendar__tile]:justify-center",
         "[&_.react-calendar__tile]:rounded-lg",
+        "[&_.react-calendar__tile]:text-[0.9rem]",
         "[&_.react-calendar__tile]:text-gray-900",
         "[&_.react-calendar__tile]:bg-white",
         "[&_.react-calendar__tile:hover]:bg-gray-100",
-        // 오늘/선택일
+
+        // 오늘/선택일 
         "[&_.react-calendar__tile--now]:!bg-sky-100",
         "[&_.react-calendar__tile--now]:!rounded-full",
         "[&_.react-calendar__tile--now]:font-semibold",
@@ -89,8 +94,10 @@ export default function CalendarPage() {
         "[&_.react-calendar__tile--active]:!rounded-full",
         "[&_.react-calendar__tile--active]:w-[60px]",
         "[&_.react-calendar__tile--active]:h-[60px]",
+
         // 이웃달
         "[&_.react-calendar__month-view__days__day--neighboringMonth]:text-gray-300",
+
         // 네비게이션
         "[&_.react-calendar__navigation]:flex",
         "[&_.react-calendar__navigation]:items-center",
@@ -98,7 +105,8 @@ export default function CalendarPage() {
         "[&_.react-calendar__navigation]:mb-4",
         "[&_.react-calendar__navigation__label]:bg-transparent",
         "[&_.react-calendar__navigation__arrow]:bg-transparent",
-        // 모바일 대응
+
+        // 모바일에서는 다시 조금 줄이기 
         "max-[480px]:[&_.react-calendar__tile]:w-[45px]",
         "max-[480px]:[&_.react-calendar__tile]:h-[45px]",
         "max-[480px]:[&_.react-calendar__tile]:text-[0.75rem]",
@@ -193,7 +201,7 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="mx-auto my-5 w-full max-w-[600px] rounded-xl bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.1)] max-[480px]:p-4">
+    <div className="mx-auto mt-16 mb-10 w-full max-w-[1000px] rounded-2xl bg-white p-10 shadow-[0_4px_20px_rgba(0,0,0,0.1)] max-[480px]:p-4">
       <div className="mb-4 flex flex-col items-center gap-3">
         <h1 className="mb-2 border-b border-gray-300 pb-4 text-3xl font-bold text-gray-900">
           📅 나의 장학 캘린더
@@ -207,7 +215,6 @@ export default function CalendarPage() {
         />
       </div>
 
-      {/* react-calendar 래퍼에 하위 선택자 기반 Tailwind 적용 */}
       <div className={calendarShellClass}>
         <Calendar
           tileContent={renderTileContent}
