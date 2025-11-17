@@ -32,8 +32,8 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section id="how-to" className="mt-16 sm:mt-24 py-10 sm:py-16 bg-gray-50">
-      <div className="w-full px-0">
+    <section id="how-to" className="py-10 sm:py-16 bg-gray-50 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 제목 */}
         <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">

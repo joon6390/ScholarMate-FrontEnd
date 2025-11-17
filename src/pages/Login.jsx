@@ -468,7 +468,7 @@ export default function Login() {
                 {loading ? "로그인 중..." : "로그인"}
               </button>
 
-              <div className="flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm pt-2 gap-2 sm:gap-0">
+              <div className="flex items-center justify-between text-[11px] sm:text-sm pt-2 gap-3 whitespace-nowrap">
                 <label
                   htmlFor="autoLogin"
                   className="inline-flex items-center gap-2 cursor-pointer select-none text-gray-900 font-bold"
@@ -496,7 +496,7 @@ export default function Login() {
                   자동 로그인
                 </label>
 
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-gray-400 justify-center">
+                <div className="flex items-center gap-2 sm:gap-3 text-gray-400 justify-center whitespace-nowrap">
                   <button
                     type="button"
                     className="hover:text-gray-600"

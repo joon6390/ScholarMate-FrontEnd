@@ -78,7 +78,7 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="wishlist-wrapper">
+    <div className="wishlist-wrapper mt-14">
       <h1 className="text-3xl font-bold mb-8 pb-4 border-b border-gray-300 text-gray-900">
         관심 장학금 목록
       </h1>
