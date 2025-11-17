@@ -127,6 +127,11 @@ const Userinfor = () => {
       });
 
       if (response.status === 200) {
+        // ✅ 이름 로컬스토리지에 저장
+        if (name) {
+          localStorage.setItem("userName", name);
+        }
+
         alert("장학 정보가 성공적으로 저장되었습니다.");
         navigate("/profile");
       } else {

@@ -1,7 +1,7 @@
-// src/pages/Recommendation.jsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import { FaStar } from "react-icons/fa"; 
 
 const DUMMY_RECOMMENDATIONS = [
   {
@@ -40,6 +40,8 @@ export default function Recommendation() {
   // 선별 이유 모달
   const [reasonOpen, setReasonOpen] = useState(false);
   const [reasonTarget, setReasonTarget] = useState(null);
+
+  const [userName, setUserName] = useState("");
 
   const navigate = useNavigate();
 
@@ -89,6 +91,13 @@ export default function Recommendation() {
     }, duration);
   };
   useEffect(() => () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }, []);
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("userName");
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, []);
 
   // 추천 로드
   useEffect(() => {
@@ -259,8 +268,11 @@ export default function Recommendation() {
   if (loading) {
     return (
       <Wrapper>
-        <div className="text-lg sm:text-xl font-semibold text-gray-700 text-center">
+        <div className="text-lg sm:text-xl font-extrabold text-black text-center">
           추천 장학금을 로딩 중입니다...
+        </div>
+        <div className="mt-5 text-sm font-bold text-gray-600 text-center">
+          (길게는 30초까지도 걸릴 수 있습니다. 잠시만 기다려주세요.)
         </div>
       </Wrapper>
     );
@@ -320,9 +332,21 @@ export default function Recommendation() {
 
   return (
     <Wrapper>
-      <h1 className="text-2xl sm:text-4xl font-extrabold mb-6 sm:mb-8 pb-3 sm:pb-4 border-b-4 border-blue-600 text-gray-900 text-center">
-        추천 장학금
+      <h1 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-3 pb-3 sm:pb-4 border-b-4 border-blue-600 text-gray-900 text-center">
+        {userName ? (
+          <>
+            <span className="text-blue-600">{userName}</span>
+            <span>님의 추천 장학금</span>
+          </>
+        ) : (
+          "추천 장학금"
+        )}
       </h1>
+
+      <p className="flex items-center justify-center gap-2 text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 font-bold">
+        <FaStar className="text-yellow-400 text-base sm:text-lg" />
+        <span>ScholarMate의 랭킹 시스템으로 추천 정확도가 높은 순으로 최대 5개씩 보여집니다.</span>
+      </p>
 
       <div className="space-y-4 sm:space-y-6">
         {recommendations.slice(0, visibleCount).map((s) => {
@@ -511,7 +535,7 @@ export default function Recommendation() {
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute right-4 top-3 text-sm text-gray-500 hover:text-gray-800"
+              className="absolute right-4 top-3 text-sm text-white hover:text-gray-800"
               onClick={() => setReasonOpen(false)}
               aria-label="닫기"
             >
